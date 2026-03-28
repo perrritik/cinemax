@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Каталог — Cinemax</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/player.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINE<span>MAX</span></a>
+  <nav class="site-nav">
+    <a href="index.html">Главная</a>
+    <a href="catalog.html" class="active">Фильмы</a>
+    <a href="catalog.html?type=series">Сериалы</a>
+    <a href="catalog.html?type=new">Новинки</a>
+    <a href="catalog.html?type=top">Топ</a>
+  </nav>
+  <div class="header-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Поиск…" class="catalog-search-input" />
+  </div>
+  <div class="header-actions">
+    <a href="profile.html" class="btn-ghost">Профиль</a>
+    <a href="profile.html" class="btn-primary">Войти</a>
+  </div>
+  <button class="burger"><span></span><span></span><span></span></button>
+</header>
+
+<main class="page-wrap z1">
+
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Каталог</h1>
+      <p class="page-subtitle">Фильмы, сериалы, документалки</p>
+    </div>
+  </div>
+
+  <!-- TABS
+  <div class="tab-bar">
+    <button class="tab-btn active">Все</button>
+    <button class="tab-btn">Фильмы</button>
+    <button class="tab-btn">Сериалы</button>
+    <button class="tab-btn">Новинки</button>
+    <button class="tab-btn">Топ</button>
+  </div> -->
+
+  <!-- FILTERS
+  <div class="catalog-top">
+    <div class="filter-bar">
+      <select class="filter-select">
+        <option value="">Жанр</option>
+        <option>Фантастика</option>
+        <option>Драма</option>
+        <option>Триллер</option>
+        <option>Криминал</option>
+        <option>Ужасы</option>
+        <option>Боевик</option>
+        <option>Фэнтези</option>
+        <option>Биография</option>
+      </select>
+      <select class="filter-select">
+        <option value="">Год</option>
+        <option>2024</option><option>2023</option><option>2022</option>
+        <option>2021</option><option>2020</option><option>2019</option>
+        <option>2018</option><option>2017</option>
+        <option>2010–2016</option><option>2000–2009</option>
+      </select>
+      <select class="filter-select">
+        <option value="">Рейтинг</option>
+        <option>9+</option><option>8+</option><option>7+</option><option>6+</option>
+      </select>
+      <select class="filter-select">
+        <option value="">Качество</option>
+        <option>4K UHD</option><option>1080p</option><option>720p</option>
+      </select>
+      <select class="filter-select">
+        <option value="">Сортировка</option>
+        <option>По рейтингу</option>
+        <option>По дате</option>
+        <option>По алфавиту</option>
+      </select>
+    </div>
+    <span class="results-count">— результатов</span>
+  </div> -->
+
+  <!-- GENRE QUICK FILTER -->
+  <div class="genre-filter-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+    <span class="genre-tag genre-filter-tag active" data-genre="all">Все жанры</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Фантастика">Фантастика</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Драма">Драма</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Триллер">Триллер</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Криминал">Криминал</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Ужасы">Ужасы</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Боевик">Боевик</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Фэнтези">Фэнтези</span>
+    <span class="genre-tag genre-filter-tag" data-genre="Биография">Биография</span>
+  </div>
+
+  <!-- GRID -->
+  <div class="cards-grid" id="catalog-grid"></div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><span class="footer-logo">CINE<span>MAX</span></span><p class="footer-tagline">Тысячи фильмов и сериалов. Смотри где угодно.</p></div>
+    <div><div class="footer-col-title">Навигация</div><div class="footer-links"><a href="index.html">Главная</a><a href="catalog.html">Каталог</a><a href="catalog.html?type=new">Новинки</a></div></div>
+    <div><div class="footer-col-title">Аккаунт</div><div class="footer-links"><a href="profile.html">Профиль</a><a href="#">Подписка</a></div></div>
+    <div><div class="footer-col-title">Информация</div><div class="footer-links"><a href="#">О нас</a><a href="#">Контакты</a></div></div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Cinemax · Все права защищены</span>
+    <div class="footer-socials">
+      <a href="#" class="social-btn"><svg width="13" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 7.4c.1-.4 0-.7-.6-.7h-2c-.5 0-.7.3-.8.6 0 0-.9 2.2-2.2 3.6-.4.4-.6.5-.8.5-.1 0-.3-.1-.3-.5V7.4c0-.5-.1-.7-.6-.7H11c-.4 0-.6.3-.6.6 0 .6.9.7.9 2.4v3.7c0 .6-.1.7-.3.7-.6 0-2-2.2-2.9-4.8-.2-.5-.4-.7-.9-.7H5.2c-.6 0-.7.3-.7.6 0 .6.6 3.4 2.8 7.2 1.5 2.6 3.5 3.9 5.4 3.9 1.1 0 1.3-.2 1.3-.7v-1.8c0-.5.1-.7.5-.7.3 0 .8.2 2 1.3 1.4 1.4 1.6 2 2.3 2H21c.6 0 .9-.3.7-.8-.2-.5-.7-1.2-1.4-2-.4-.5-.9-1-1.1-1.3-.3-.4-.2-.5 0-.8 0 0 2.1-3 2.6-4z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script src="js/data.js"></script>
+<script src="js/player.js"></script>
+<script src="js/render.js"></script>
+<script src="js/router.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

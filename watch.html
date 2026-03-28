@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Смотреть — Cinemax</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/player.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINE<span>MAX</span></a>
+  <nav class="site-nav">
+    <a href="index.html">Главная</a>
+    <a href="catalog.html">Фильмы</a>
+  </nav>
+</header>
+
+<main class="watch-page-wrap z1">
+  <div class="breadcrumb">
+    <a href="index.html">Главная</a> <span class="sep">/</span>
+    <a href="catalog.html">Каталог</a> <span class="sep">/</span>
+    <a href="#" id="bc-movie-link">Загрузка...</a>
+  </div>
+
+  <div class="video-player-wrapper">
+    <div id="player" data-plyr-provider="youtube" data-plyr-embed-id=""></div>
+  </div>
+
+  <div class="watch-info-grid">
+    <div>
+      <div class="now-playing-label">Сейчас воспроизводится</div>
+      <h1 class="movie-title-big wp-title">Название фильма</h1>
+      <div class="movie-stats-row" style="margin-bottom: 20px;">
+        <span class="rating-badge wp-rating">★ 0.0</span>
+        <span class="stat-tag wp-year">0000</span>
+        <span class="stat-tag wp-quality">4K</span>
+      </div>
+      <div class="genre-tags-row wp-genres"></div>
+      <p class="movie-desc wp-desc" style="margin-top: 20px; color: var(--muted);"></p>
+    </div>
+
+    <aside class="movie-sidebar">
+      <div class="meta-row"><span class="meta-label">Режиссёр</span><span class="meta-value wp-director">—</span></div>
+      <div class="side-divider"></div>
+      <div class="meta-row"><span class="meta-label">Страна</span><span class="meta-value wp-country">—</span></div>
+      <div class="side-divider"></div>
+      <button class="btn-outline-sm" style="width:100%" onclick="window.history.back()">← Назад</button>
+    </aside>
+  </div>
+</main>
+
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script src="js/data.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get('id') || 'interstellar';
+
+    const allItems = [...CINEMAX_DATA.featured, ...CINEMAX_DATA.movies, ...(CINEMAX_DATA.series || [])];
+    const movie = allItems.find(m => m.id === movieId);
+
+    if (!movie) {
+        document.querySelector('.wp-title').textContent = 'Фильм не найден';
+        return;
+    }
+
+    // 1. Заполняем текст
+    document.title = `${movie.title} — Cinemax`;
+    document.getElementById('bc-movie-link').textContent = movie.title;
+    document.querySelector('.wp-title').textContent = movie.title;
+    document.querySelector('.wp-rating').textContent = `★ ${movie.rating}`;
+    document.querySelector('.wp-year').textContent = movie.year;
+    document.querySelector('.wp-desc').textContent = movie.desc || movie.description || "";
+    document.querySelector('.wp-director').textContent = movie.director || '—';
+    document.querySelector('.wp-country').textContent = movie.country || '—';
+
+    const genreContainer = document.querySelector('.wp-genres');
+    if (movie.genres) {
+        genreContainer.innerHTML = movie.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+    }
+
+    // 2. Логика получения ID видео из ссылки YouTube
+    function getYouTubeID(url) {
+        if (!url) return 'dQw4w9WgXcQ'; // Заглушка, если ссылки нет
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : url;
+    }
+
+    const videoId = getYouTubeID(movie.video);
+
+    // 3. Инициализация Plyr с нужным ID
+    const player = new Plyr('#player', {
+        settings: ['quality', 'speed'],
+        youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 }
+    });
+
+    // Устанавливаем источник
+    player.source = {
+        type: 'video',
+        sources: [{ src: videoId, provider: 'youtube' }],
+    };
+});
+</script>
+
+<style>
+  .video-player-wrapper { 
+    background: #000; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    margin-bottom: 30px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .now-playing-label {
+    font-family: var(--font-mono);
+    font-size: .6rem;
+    text-transform: uppercase;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+</style>
+</body>
+</html>
