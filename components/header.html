@@ -1,0 +1,32 @@
+<!--
+  components/header.html
+  Paste this at the top of <body> on every page.
+-->
+
+<header class="site-header">
+  <a href="index.html" class="logo">CINE<span>MAX</span></a>
+
+  <nav class="site-nav">
+    <a href="index.html">Главная</a>
+    <a href="catalog.html">Фильмы</a>
+    <a href="catalog.html?type=series">Сериалы</a>
+    <a href="catalog.html?type=new">Новинки</a>
+    <a href="catalog.html?type=top">Топ</a>
+  </nav>
+
+  <div class="header-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="text" placeholder="Поиск фильмов, сериалов…" class="catalog-search-input" />
+  </div>
+
+  <div class="header-actions">
+    <a href="profile.html" class="btn-ghost">Профиль</a>
+    <a href="profile.html" class="btn-primary">Войти</a>
+  </div>
+
+  <button class="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</header>

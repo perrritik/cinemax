@@ -1,0 +1,93 @@
+/* ============================================================
+   data.js — Mock movie catalog data
+   ============================================================ */
+
+const CINEMAX_DATA = {
+
+  featured: [
+    {
+      id: 'interstellar',
+      title: 'Интерстеллар',
+      titleOrig: 'Interstellar',
+      year: 2014, duration: '169 мин.', rating: 8.6,
+      quality: '4K UHD', age: '16+',
+      genres: ['Фантастика', 'Драма', 'Приключения'],
+      director: 'Кристофер Нолан',
+      cast: ['Мэттью МакКонахи', 'Энн Хэтэуэй', 'Джессика Честейн', 'Майкл Кейн'],
+      country: 'США, Великобритания',
+      lang: 'Русский, Английский',
+      desc: 'Когда засуха приводит человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека.',
+      poster: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&h=900&fit=crop',
+      bg:     'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1800&fit=crop',
+      video:  'https://youtu.be/EuB5Byv_hYA',
+      badge: null,
+    },
+    {
+      id: 'dune',
+      title: 'Дюна',
+      titleOrig: 'Dune: Part One',
+      year: 2021, duration: '155 мин.', rating: 8.0,
+      quality: '4K UHD', age: '12+',
+      genres: ['Фантастика', 'Эпик', 'Приключения'],
+      director: 'Дени Вильнёв',
+      cast: ['Тимоти Шаламе', 'Зендея', 'Оскар Айзек', 'Ребекка Фергюсон'],
+      country: 'США, Канада',
+      lang: 'Русский, Английский',
+      desc: 'История Пола Атрейдеса — юноши, ставшего легендой. Он должен путешествовать на самую опасную планету во вселенной, чтобы обеспечить будущее своей семьи и своего народа.',
+      poster: 'https://images.unsplash.com/photo-1543373014-cfe4f4bc1cdf?w=600&h=900&fit=crop',
+      bg:     'https://images.unsplash.com/photo-1543373014-cfe4f4bc1cdf?w=1800&fit=crop',
+      video:  'VIDEO_URL.mp4',
+      badge: 'hot',
+    },
+    {
+      id: 'oppenheimer',
+      title: 'Оппенгеймер',
+      titleOrig: 'Oppenheimer',
+      year: 2023, duration: '180 мин.', rating: 8.5,
+      quality: '4K UHD', age: '18+',
+      genres: ['Биография', 'Драма', 'История'],
+      director: 'Кристофер Нолан',
+      cast: ['Киллиан Мёрфи', 'Эмили Блант', 'Мэтт Деймон', 'Роберт Дауни мл.'],
+      country: 'США, Великобритания',
+      lang: 'Русский, Английский',
+      desc: 'История жизни американского физика Роберта Оппенгеймера, известного как отец атомной бомбы. Триумф и трагедия одного из самых сложных людей XX века.',
+      poster: 'https://images.unsplash.com/photo-1532356884227-66d7c0e9e9f0?w=600&h=900&fit=crop',
+      bg:     'https://images.unsplash.com/photo-1532356884227-66d7c0e9e9f0?w=1800&fit=crop',
+      video:  'VIDEO_URL.mp4',
+      badge: 'new',
+    },
+  ],
+
+  movies: [
+    { id:'gravity',      title:'Гравитация',   titleOrig:'Gravity',          year:2013, rating:7.7, quality:'1080p', genres:['Фантастика'],          badge:'hd',  poster:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&h=600&fit=crop' },
+    { id:'arrival',      title:'Прибытие',      titleOrig:'Arrival',          year:2016, rating:7.9, quality:'4K',    genres:['Фантастика','Драма'],   badge:null,  poster:'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=400&h=600&fit=crop' },
+    { id:'martian',      title:'Марсианин',     titleOrig:'The Martian',      year:2015, rating:8.0, quality:'4K',    genres:['Фантастика'],          badge:'top', poster:'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop' },
+    { id:'inception',    title:'Начало',         titleOrig:'Inception',        year:2010, rating:8.8, quality:'4K',    genres:['Фантастика','Триллер'], badge:'top', poster:'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=600&fit=crop' },
+    { id:'contact',      title:'Контакт',        titleOrig:'Contact',          year:1997, rating:7.9, quality:'1080p', genres:['Фантастика','Драма'],   badge:null,  poster:'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=400&h=600&fit=crop' },
+    { id:'bladerunner',  title:'Бегущий по лезвию 2049', titleOrig:'Blade Runner 2049', year:2017, rating:8.0, quality:'4K', genres:['Фантастика','Неонуар'], badge:'hd', poster:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=600&fit=crop' },
+    { id:'midsommar',    title:'Солнцестояние',  titleOrig:'Midsommar',        year:2019, rating:7.1, quality:'4K',    genres:['Ужасы','Триллер'],     badge:null,  poster:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop' },
+    { id:'hereditary',   title:'Реликвия',       titleOrig:'Hereditary',       year:2018, rating:7.3, quality:'1080p', genres:['Ужасы'],               badge:null,  poster:'https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400&h=600&fit=crop' },
+    { id:'tenet',        title:'Довод',           titleOrig:'Tenet',            year:2020, rating:7.4, quality:'4K',    genres:['Боевик','Фантастика'], badge:'hd',  poster:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=600&fit=crop' },
+    { id:'parasite',     title:'Паразиты',        titleOrig:'Parasite',         year:2019, rating:8.5, quality:'4K',    genres:['Триллер','Драма'],     badge:'top', poster:'https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?w=400&h=600&fit=crop' },
+    { id:'1917',         title:'1917',            titleOrig:'1917',             year:2019, rating:8.3, quality:'4K',    genres:['Военный','Драма'],     badge:null,  poster:'https://images.unsplash.com/photo-1504812615/photo-1504812615-600000.jpg?w=400&h=600&fit=crop' },
+    { id:'whiplash',     title:'Одержимость',     titleOrig:'Whiplash',         year:2014, rating:8.5, quality:'1080p', genres:['Драма','Музыка'],      badge:'top', poster:'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=600&fit=crop' },
+  ],
+
+  series: [
+    { id:'bb',           title:'Во все тяжкие',     titleOrig:'Breaking Bad',       year:2008, seasons:5, rating:9.5, quality:'4K',    genres:['Драма','Криминал'],    badge:'top', poster:'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&h=600&fit=crop' },
+    { id:'chernobyl',    title:'Чернобыль',          titleOrig:'Chernobyl',          year:2019, seasons:1, rating:9.4, quality:'4K',    genres:['Мини-сериал','Драма'], badge:'top', poster:'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400&h=600&fit=crop' },
+    { id:'got',          title:'Игра престолов',     titleOrig:'Game of Thrones',    year:2011, seasons:8, rating:9.3, quality:'4K',    genres:['Фэнтези','Драма'],     badge:'hd',  poster:'https://images.unsplash.com/photo-1488229297570-58520851e868?w=400&h=600&fit=crop' },
+    { id:'peaky',        title:'Острые козырьки',    titleOrig:'Peaky Blinders',     year:2013, seasons:6, rating:8.8, quality:'4K',    genres:['Криминал','Драма'],    badge:null,  poster:'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&h=600&fit=crop' },
+    { id:'witcher',      title:'Ведьмак',             titleOrig:'The Witcher',        year:2019, seasons:3, rating:8.2, quality:'4K',    genres:['Фэнтези','Боевик'],    badge:'new', poster:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop' },
+    { id:'dark',         title:'Тьма',                titleOrig:'Dark',               year:2017, seasons:3, rating:8.8, quality:'4K',    genres:['Мистика','Фантастика'],badge:null,  poster:'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=600&fit=crop' },
+  ],
+
+  nowWatching: {
+    id: 'interstellar',
+    title: 'Интерстеллар',
+    episode: 'Фильм',
+    progress: 42,
+    poster: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=400&h=225&fit=crop',
+    video: 'VIDEO_URL.mp4',
+  },
+};
