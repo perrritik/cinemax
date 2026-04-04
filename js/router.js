@@ -28,25 +28,13 @@ const Router = (() => {
     setTimeout(() => { window.location.href = url; }, 220);
   }
 
-  /* ── Movie card click → movie page ── */
-  function bindCardClicks() {
-    qsa('.movie-card, .movie-card-wide').forEach(card => {
-      card.addEventListener('click', e => {
-        // Don't navigate if clicking inner button
-        if (e.target.closest('button, a')) return;
-        const id = card.dataset.movieId;
-        if (id) navigate(`movie.html?id=${id}`);
-      });
-    });
-  }
-
   /* ── "Watch" button → watch page ── */
   function bindWatchButtons() {
     qsa('[data-watch]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         const id = btn.dataset.watch;
-        navigate(`watch.html?id=${id}`);
+        if (id) navigate(`watch.html?id=${id}`);
       });
     });
   }
@@ -66,16 +54,16 @@ const Router = (() => {
 
       tabs.forEach((tab, i) => {
         tab.addEventListener('click', () => {
-          tabs.forEach(t   => t.classList.remove('active'));
-          targets.forEach(p => p.classList.remove('active'));
+          tabs.forEach(t    => t.classList.remove('active'));
+          targets.forEach(p => p.style.display = 'none');
           tab.classList.add('active');
-          if (targets[i]) targets[i].classList.add('active');
+          if (targets[i]) targets[i].style.display = '';
         });
       });
 
-      // Activate first by default
-      if (tabs[0])    tabs[0].classList.add('active');
-      if (targets[0]) targets[0].classList.add('active');
+      // Activate first tab by default
+      if (tabs[0]) tabs[0].classList.add('active');
+      targets.forEach((p, i) => p.style.display = i === 0 ? '' : 'none');
     });
   }
 
@@ -88,13 +76,15 @@ const Router = (() => {
         tag.classList.add('active');
 
         const genre = tag.dataset.genre || 'all';
-        const grid  = qs('.cards-grid, .cards-grid-wide');
+        // Find the closest cards grid
+        const grid = bar.nextElementSibling?.classList.contains('cards-grid')
+          ? bar.nextElementSibling
+          : qs('.cards-grid, .cards-grid-wide');
         if (!grid) return;
 
         qsa('.movie-card, .movie-card-wide', grid).forEach(card => {
           const genres = (card.dataset.genres || '').split(',');
-          card.style.display =
-            (genre === 'all' || genres.includes(genre)) ? '' : 'none';
+          card.style.display = (genre === 'all' || genres.includes(genre)) ? '' : 'none';
         });
       });
     });
@@ -115,7 +105,7 @@ const Router = (() => {
 
   /* ── Hero slider autoplay ── */
   function initHeroSlider() {
-    const dots  = qsa('.hero-dot');
+    const dots   = qsa('.hero-dot');
     const slides = typeof CINEMAX_DATA !== 'undefined' ? CINEMAX_DATA.featured : [];
     if (!dots.length || !slides.length) return;
 
@@ -133,18 +123,22 @@ const Router = (() => {
       if (bg) bg.style.backgroundImage = `url('${slide.bg}')`;
 
       const title = qs('.hero-title');
-      if (title) { title.style.opacity = '0'; title.textContent = slide.title; setTimeout(() => (title.style.opacity = '1'), 50); }
+      if (title) {
+        title.style.opacity = '0';
+        title.textContent = slide.title;
+        setTimeout(() => (title.style.opacity = '1'), 50);
+      }
 
       const rating = qs('.hero-rating');
       if (rating) rating.textContent = '★ ' + slide.rating;
 
-      const year   = qs('.hero-year');
+      const year = qs('.hero-year');
       if (year) year.textContent = slide.year;
 
-      const dur    = qs('.hero-dur');
+      const dur = qs('.hero-dur');
       if (dur) dur.textContent = slide.duration;
 
-      const desc   = qs('.hero-desc');
+      const desc = qs('.hero-desc');
       if (desc) desc.textContent = slide.desc;
 
       const watchBtn = qs('[data-watch-hero]');
@@ -152,6 +146,9 @@ const Router = (() => {
 
       const movieBtn = qs('[data-movie-hero]');
       if (movieBtn) movieBtn.href = `movie.html?id=${slide.id}`;
+
+      // Re-bind watch buttons after hero update
+      bindWatchButtons();
     }
 
     dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
@@ -163,7 +160,8 @@ const Router = (() => {
   /* ── Init ── */
   function init() {
     markActiveNav();
-    bindCardClicks();
+    // NOTE: Card clicks are now handled via native <a href> in render.js
+    // bindCardClicks() is called per-grid inside Render.renderGrid()
     bindWatchButtons();
     bindBackButtons();
     initTabs();

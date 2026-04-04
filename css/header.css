@@ -2,6 +2,10 @@
    header.css
    ============================================================ */
 
+#avatarDropdown.open {
+    display: block !important;
+}
+
 .site-header {
   position: sticky; top: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
@@ -16,7 +20,7 @@
 /* Logo */
 .logo {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 2rem;
   letter-spacing: .14em;
   color: var(--accent);
   flex-shrink: 0;
@@ -27,7 +31,7 @@
 .site-nav { display: flex; gap: 28px; align-items: center; flex: 1; justify-content: center; }
 .site-nav a {
   font-family: var(--font-mono);
-  font-size: .65rem;
+  font-size: .90rem;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--muted);

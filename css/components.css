@@ -296,3 +296,71 @@
   position: absolute; top: -2px; right: -2px;
   box-shadow: 0 0 6px var(--red);
 }
+
+/* ── Аватар в хедере ── */
+.header-avatar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid rgba(74,158,255,0.5);
+  transition: border-color .2s, transform .15s;
+  background: var(--surface2, #1a1f2e);
+  flex-shrink: 0;
+  display: none; /* скрыт пока не войдёт */
+}
+.header-avatar-btn:hover { border-color: var(--accent, #4a9eff); transform: scale(1.06); }
+.header-avatar-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.header-avatar-initials {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: #fff;
+  background: linear-gradient(135deg, #4a9eff, #a78bfa);
+}
+
+/* ── Дропдаун меню аватара ── */
+.avatar-dropdown-wrap { position: relative; }
+.avatar-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 200px;
+  background: var(--surface, #111827);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 12px;
+  padding: 8px;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+}
+.avatar-dropdown.open { display: block; }
+.avatar-dropdown-user {
+  padding: 10px 10px 12px;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+  margin-bottom: 6px;
+}
+.avatar-dropdown-name { font-size: 14px; font-weight: 600; color: var(--text, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.avatar-dropdown-email { font-size: 11px; color: var(--muted, rgba(255,255,255,0.4)); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.avatar-dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; border-radius: 8px;
+  font-size: 13px; color: var(--text2, rgba(255,255,255,0.75));
+  cursor: pointer; transition: background .15s;
+  text-decoration: none;
+}
+.avatar-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+.avatar-dropdown-item.danger { color: #ff6b6b; }
+.avatar-dropdown-item.danger:hover { background: rgba(255,74,74,0.08); }
+
+/* ── Кнопка входа (когда не авторизован) ── */
+.btn-login-google {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text, #fff); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: border-color .15s, background .15s;
+  white-space: nowrap;
+}
+.btn-login-google:hover { border-color: rgba(74,158,255,0.5); background: rgba(74,158,255,0.06); }
