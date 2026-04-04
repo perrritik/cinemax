@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Смотреть — Cinemax</title>
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/header.css" />
   <link rel="stylesheet" href="css/player.css" />
@@ -13,12 +12,56 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
   <a href="index.html" class="logo">CINE<span>MAX</span></a>
   <nav class="site-nav">
-    <a href="index.html">Главная</a>
+    <a href="index.html" class="active">Главная</a>
     <a href="catalog.html">Фильмы</a>
+    <a href="catalog.html?type=series">Сериалы</a>
+    <a href="catalog.html?type=new">Новинки</a>
+    <a href="catalog.html?type=top">Топ</a>
   </nav>
+  <div class="header-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Поиск…" class="catalog-search-input" />
+  </div>
+  <div class="header-actions">
+
+    <!-- Кнопка входа (только когда не авторизован) -->
+    <button class="btn-login-google" id="headerLoginBtn">
+      <svg width="15" height="15" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+        <path d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Войти
+    </button>
+
+    <!-- Аватар (только когда авторизован) -->
+    <div class="avatar-dropdown-wrap" id="headerAvatarWrap">
+      <button class="header-avatar-btn" id="headerAvatarBtn">
+        <div class="header-avatar-initials" id="headerAvatarInitials"></div>
+      </button>
+      <div class="avatar-dropdown" id="avatarDropdown">
+        <div class="avatar-dropdown-user">
+          <div class="avatar-dropdown-name" id="dropdownName">—</div>
+          <div class="avatar-dropdown-email" id="dropdownEmail">—</div>
+        </div>
+        <a href="profile.html" class="avatar-dropdown-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Мой профиль
+        </a>
+        <div class="avatar-dropdown-item danger" id="dropdownLogout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="burger"><span></span><span></span><span></span></button>
 </header>
 
 <main class="watch-page-wrap z1">
@@ -28,18 +71,46 @@
     <a href="#" id="bc-movie-link">Загрузка...</a>
   </div>
 
-  <div class="video-player-wrapper">
-    <div id="player" data-plyr-provider="youtube" data-plyr-embed-id=""></div>
+  <!-- PLAYER AREA -->
+  <div class="video-player-wrapper" id="player-wrapper">
+
+    <!-- VK Video iframe (показывается если есть video) -->
+    <div id="vk-player-container" style="display:none; position:relative; width:100%; aspect-ratio:16/9;">
+      <iframe
+        id="vk-iframe"
+        src=""
+        width="100%"
+        height="100%"
+        style="border:none; display:block;"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media;"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <!-- Заглушка "Скоро" (показывается если нет video) -->
+    <div id="vk-player-soon" style="display:none; position:relative; width:100%; aspect-ratio:16/9; background:#000; display:flex; align-items:center; justify-content:center;">
+      <div style="text-align:center;">
+        <div class="soon-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(74,158,255,.5)" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div style="font-family:var(--font-display);font-size:2rem;letter-spacing:.2em;color:var(--text);margin-bottom:8px;">СКОРО</div>
+        <div style="font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;color:var(--muted);">Видео появится позже</div>
+        <a id="soon-back-link" href="movie.html" class="btn-outline-sm" style="margin-top:24px;display:inline-flex;">← Назад к фильму</a>
+      </div>
+    </div>
+
   </div>
 
+  <!-- INFO BLOCK -->
   <div class="watch-info-grid">
     <div>
       <div class="now-playing-label">Сейчас воспроизводится</div>
-      <h1 class="movie-title-big wp-title">Название фильма</h1>
+      <h1 class="movie-title-big wp-title">Загрузка...</h1>
       <div class="movie-stats-row" style="margin-bottom: 20px;">
-        <span class="rating-badge wp-rating">★ 0.0</span>
-        <span class="stat-tag wp-year">0000</span>
-        <span class="stat-tag wp-quality">4K</span>
+        <span class="rating-badge wp-rating"></span>
+        <span class="stat-tag wp-year"></span>
+        <span class="stat-tag wp-quality"></span>
+        <span class="stat-tag wp-dur"></span>
       </div>
       <div class="genre-tags-row wp-genres"></div>
       <p class="movie-desc wp-desc" style="margin-top: 20px; color: var(--muted);"></p>
@@ -50,72 +121,124 @@
       <div class="side-divider"></div>
       <div class="meta-row"><span class="meta-label">Страна</span><span class="meta-value wp-country">—</span></div>
       <div class="side-divider"></div>
+      <div class="meta-row"><span class="meta-label">Язык</span><span class="meta-value wp-lang">—</span></div>
+      <div class="side-divider"></div>
+      <a id="btn-movie-page" href="#" class="btn-outline-sm" style="width:100%;justify-content:center;text-decoration:none;display:flex;margin-bottom:8px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        О фильме
+      </a>
       <button class="btn-outline-sm" style="width:100%" onclick="window.history.back()">← Назад</button>
     </aside>
   </div>
 </main>
-
-<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script type="module" src="js/authgoogle.js"></script>
 <script src="js/data.js"></script>
+<script src="js/player.js"></script>
+<script src="js/render.js"></script>
+<script src="js/router.js"></script>
+<script src="js/app.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const movieId = params.get('id') || 'interstellar';
+  // ── 1. Найти фильм ──────────────────────────────────────────
+  const params  = new URLSearchParams(window.location.search);
+  const movieId = params.get('id') || 'interstellar';
 
-    const allItems = [...CINEMAX_DATA.featured, ...CINEMAX_DATA.movies, ...(CINEMAX_DATA.series || [])];
-    const movie = allItems.find(m => m.id === movieId);
+  const all = [
+    ...(CINEMAX_DATA.featured || []),
+    ...(CINEMAX_DATA.movies   || []),
+    ...(CINEMAX_DATA.series   || []),
+  ];
+  const movie = all.find(m => m.id === movieId);
 
-    if (!movie) {
-        document.querySelector('.wp-title').textContent = 'Фильм не найден';
-        return;
-    }
+  if (!movie) {
+    document.querySelector('.wp-title').textContent = 'Фильм не найден';
+    return;
+  }
 
-    // 1. Заполняем текст
-    document.title = `${movie.title} — Cinemax`;
-    document.getElementById('bc-movie-link').textContent = movie.title;
-    document.querySelector('.wp-title').textContent = movie.title;
-    document.querySelector('.wp-rating').textContent = `★ ${movie.rating}`;
-    document.querySelector('.wp-year').textContent = movie.year;
-    document.querySelector('.wp-desc').textContent = movie.desc || movie.description || "";
-    document.querySelector('.wp-director').textContent = movie.director || '—';
-    document.querySelector('.wp-country').textContent = movie.country || '—';
+  // ── 2. Заполнить мета-данные ─────────────────────────────────
+  document.title = `${movie.title} — Смотреть — Cinemax`;
 
-    const genreContainer = document.querySelector('.wp-genres');
-    if (movie.genres) {
-        genreContainer.innerHTML = movie.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
-    }
+  document.getElementById('bc-movie-link').textContent = movie.title;
+  document.getElementById('bc-movie-link').href = `movie.html?id=${movie.id}`;
 
-    // 2. Логика получения ID видео из ссылки YouTube
-    function getYouTubeID(url) {
-        if (!url) return 'dQw4w9WgXcQ'; // Заглушка, если ссылки нет
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : url;
-    }
+  document.querySelector('.wp-title').textContent    = movie.title;
+  document.querySelector('.wp-rating').textContent   = `★ ${movie.rating}`;
+  document.querySelector('.wp-year').textContent     = movie.year;
+  document.querySelector('.wp-quality').textContent  = movie.quality || '';
+  document.querySelector('.wp-dur').textContent      = movie.duration || (movie.seasons ? `${movie.seasons} сез.` : '');
+  document.querySelector('.wp-desc').textContent     = movie.desc || movie.description || '';
+  document.querySelector('.wp-director').textContent = movie.director || '—';
+  document.querySelector('.wp-country').textContent  = movie.country  || '—';
+  document.querySelector('.wp-lang').textContent     = movie.lang     || '—';
 
-    const videoId = getYouTubeID(movie.video);
+  document.getElementById('btn-movie-page').href    = `movie.html?id=${movie.id}`;
+  document.getElementById('soon-back-link').href    = `movie.html?id=${movie.id}`;
 
-    // 3. Инициализация Plyr с нужным ID
-    const player = new Plyr('#player', {
-        settings: ['quality', 'speed'],
-        youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 }
-    });
+  const genreContainer = document.querySelector('.wp-genres');
+  if (movie.genres) {
+    genreContainer.innerHTML = movie.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+  }
 
-    // Устанавливаем источник
-    player.source = {
-        type: 'video',
-        sources: [{ src: videoId, provider: 'youtube' }],
-    };
+  // ── 3. Проверить наличие ссылки на VK Video ──────────────────
+  const rawVideo = movie.video;
+  const hasVideo = rawVideo && rawVideo !== 'VIDEO_URL.mp4' && rawVideo.trim() !== '';
+
+  const playerContainer = document.getElementById('vk-player-container');
+  const soonContainer   = document.getElementById('vk-player-soon');
+
+  if (hasVideo) {
+    // Показать плеер
+    playerContainer.style.display = 'block';
+    soonContainer.style.display   = 'none';
+
+    // Конвертировать ссылку VK Video в embed URL
+    const embedUrl = getVKEmbedUrl(rawVideo);
+    document.getElementById('vk-iframe').src = embedUrl;
+  } else {
+    // Показать заглушку "Скоро"
+    playerContainer.style.display = 'none';
+    soonContainer.style.display   = 'flex';
+  }
 });
+
+/**
+ * Конвертирует любой формат ссылки VK Video в embed URL.
+ *
+ * Поддерживаемые форматы входных ссылок:
+ *   https://vk.com/video-XXXXXX_XXXXXX
+ *   https://vkvideo.ru/video-XXXXXX_XXXXXX
+ *   https://vk.com/video_ext.php?oid=...&id=...&hash=... (уже готовый embed)
+ *
+ * Результат: https://vk.com/video_ext.php?oid=-XXXXXX&id=XXXXXX&hd=2&js_api=1
+ */
+function getVKEmbedUrl(url) {
+  if (!url) return '';
+
+  // Уже embed-ссылка
+  if (url.includes('video_ext.php')) return url;
+
+  // Формат: video-XXXXXXX_XXXXXXX
+  // Пример: https://vk.com/video-237370340_456239017
+  //         https://vkvideo.ru/video-237370340_456239017
+  const match = url.match(/video(-?\d+)_(\d+)/);
+  if (match) {
+    const oid = match[1]; // уже содержит минус для групп/пабликов
+    const vid = match[2];
+    return `https://vk.com/video_ext.php?oid=${oid}&id=${vid}&hd=2&js_api=1`;
+  }
+
+  // Если не распознали — вернуть как есть (на случай прямых mp4)
+  return url;
+}
 </script>
 
 <style>
-  .video-player-wrapper { 
-    background: #000; 
-    border-radius: 12px; 
-    overflow: hidden; 
-    margin-bottom: 30px; 
+  .video-player-wrapper {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 30px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   }
   .now-playing-label {
@@ -125,6 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
     color: var(--accent);
     letter-spacing: 2px;
     margin-bottom: 10px;
+  }
+  .soon-icon {
+    margin-bottom: 16px;
+    opacity: .7;
+    animation: pulse-soon 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-soon {
+    0%, 100% { opacity: .5; transform: scale(1); }
+    50%       { opacity: 1;  transform: scale(1.08); }
   }
 </style>
 </body>

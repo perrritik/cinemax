@@ -10,6 +10,151 @@
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/hero.css" />
   <link rel="stylesheet" href="css/pages.css" />
+  <style>
+    /* ── Аватар в хедере ── */
+    .header-avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%; overflow: hidden;
+      cursor: pointer; border: 2px solid rgba(74,158,255,0.5);
+      transition: border-color .2s, transform .15s;
+      background: var(--surface2, #1a1f2e); flex-shrink: 0; display: none;
+    }
+    .header-avatar-btn:hover { border-color: var(--accent, #4a9eff); transform: scale(1.06); }
+    .header-avatar-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .header-avatar-initials {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: #fff;
+      background: linear-gradient(135deg, #4a9eff, #a78bfa);
+    }
+    .avatar-dropdown-wrap { position: relative; }
+    .avatar-dropdown {
+      position: absolute; top: calc(100% + 10px); right: 0; width: 200px;
+      background: var(--surface, #111827); border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 12px; padding: 8px; display: none; z-index: 1000;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    }
+    .avatar-dropdown.open { display: block; }
+    .avatar-dropdown-user { padding: 10px 10px 12px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); margin-bottom: 6px; }
+    .avatar-dropdown-name { font-size: 14px; font-weight: 600; color: var(--text, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .avatar-dropdown-email { font-size: 11px; color: var(--muted, rgba(255,255,255,0.4)); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .avatar-dropdown-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; font-size: 13px; color: var(--text2, rgba(255,255,255,0.75)); cursor: pointer; transition: background .15s; text-decoration: none; }
+    .avatar-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+    .avatar-dropdown-item.danger { color: #ff6b6b; }
+    .avatar-dropdown-item.danger:hover { background: rgba(255,74,74,0.08); }
+    .btn-login-google { display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.12); color: var(--text, #fff); font-size: 13px; font-weight: 500; cursor: pointer; transition: border-color .15s, background .15s; white-space: nowrap; }
+    .btn-login-google:hover { border-color: rgba(74,158,255,0.5); background: rgba(74,158,255,0.06); }
+
+    /* ── Профиль ── */
+    .profile-photo-wrap {
+      position: relative; width: 96px; height: 96px; flex-shrink: 0;
+    }
+    .profile-photo-wrap img,
+    .profile-photo-wrap .profile-avatar {
+      width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+      border: 3px solid rgba(74,158,255,0.3);
+    }
+    .profile-photo-initials {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, #4a9eff, #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 700; color: #fff;
+      border: 3px solid rgba(74,158,255,0.3);
+    }
+    .photo-upload-btn {
+      position: absolute; bottom: 2px; right: 2px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent, #4a9eff); border: 2px solid var(--bg, #05080f);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .15s;
+    }
+    .photo-upload-btn:hover { background: #3a8ef0; }
+    #photoFileInput { display: none; }
+
+    /* ── Никнейм inline edit ── */
+    .nickname-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nickname-display {
+      font-family: var(--font-display, 'Bebas Neue', sans-serif);
+      font-size: 1.8rem; letter-spacing: .06em; color: var(--text, #fff);
+      cursor: pointer; border-bottom: 1px dashed transparent;
+      transition: border-color .2s;
+    }
+    .nickname-display:hover { border-color: rgba(74,158,255,0.4); }
+    .nickname-input {
+      font-family: var(--font-display, 'Bebas Neue', sans-serif);
+      font-size: 1.8rem; letter-spacing: .06em; color: var(--text, #fff);
+      background: transparent; border: none; border-bottom: 1px solid var(--accent, #4a9eff);
+      outline: none; min-width: 120px; max-width: 260px;
+    }
+    .nickname-edit-btn {
+      font-size: 11px; color: var(--accent, #4a9eff); cursor: pointer;
+      background: none; border: 1px solid rgba(74,158,255,0.25);
+      border-radius: 5px; padding: 3px 8px; transition: background .15s;
+    }
+    .nickname-edit-btn:hover { background: rgba(74,158,255,0.1); }
+
+    /* ── Любимые фильмы ── */
+    .favorites-section { margin-top: 6px; }
+    .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+    .fav-card {
+      position: relative; border-radius: var(--radius, 8px); overflow: hidden;
+      background: var(--surface, #111827); border: 1px solid var(--border, rgba(255,255,255,0.08));
+      cursor: pointer; transition: border-color .2s, transform .15s;
+    }
+    .fav-card:hover { border-color: rgba(74,158,255,0.3); transform: translateY(-2px); }
+    .fav-card img { width: 100%; height: 200px; object-fit: cover; display: block; filter: brightness(.85); }
+    .fav-card-info { padding: 8px 10px; }
+    .fav-card-title { font-size: 12px; font-weight: 600; color: var(--text, #fff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fav-card-year { font-size: 11px; color: var(--muted, rgba(255,255,255,0.4)); margin-top: 2px; }
+    .fav-remove-btn {
+      position: absolute; top: 6px; right: 6px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(0,0,0,0.7); border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; transition: opacity .15s;
+    }
+    .fav-card:hover .fav-remove-btn { opacity: 1; }
+    .fav-add-btn {
+      border: 2px dashed rgba(74,158,255,0.25); border-radius: var(--radius, 8px);
+      height: 232px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer; transition: border-color .2s, background .15s;
+      color: var(--muted, rgba(255,255,255,0.4)); font-size: 13px;
+    }
+    .fav-add-btn:hover { border-color: rgba(74,158,255,0.5); background: rgba(74,158,255,0.04); color: var(--accent, #4a9eff); }
+
+    /* ── Модалка выбора фильма ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface, #111827); border: 1px solid var(--border, rgba(255,255,255,0.1));
+      border-radius: 16px; width: 100%; max-width: 520px; max-height: 80vh;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .modal-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { font-size: 16px; font-weight: 600; color: var(--text, #fff); }
+    .modal-close { background: none; border: none; color: var(--muted, rgba(255,255,255,0.4)); cursor: pointer; font-size: 20px; line-height: 1; }
+    .modal-search { padding: 14px 20px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); }
+    .modal-search input { width: 100%; background: var(--surface2, #1a1f2e); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 8px; padding: 9px 12px; color: var(--text, #fff); font-size: 14px; outline: none; }
+    .modal-search input:focus { border-color: rgba(74,158,255,0.4); }
+    .modal-list { overflow-y: auto; flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+    .modal-movie-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+    .modal-movie-item:hover { background: rgba(255,255,255,0.05); }
+    .modal-movie-item img { width: 44px; height: 60px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+    .modal-movie-title { font-size: 14px; color: var(--text, #fff); font-weight: 500; }
+    .modal-movie-meta { font-size: 12px; color: var(--muted, rgba(255,255,255,0.4)); margin-top: 2px; }
+
+    /* ── Гость-баннер ── */
+    .guest-banner {
+      background: var(--surface, #111827); border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: var(--radius, 8px); padding: 40px 24px;
+      text-align: center; display: none;
+    }
+    .guest-banner.visible { display: block; }
+    .guest-banner h2 { font-size: 1.4rem; margin-bottom: 10px; color: var(--text, #fff); }
+    .guest-banner p { color: var(--muted, rgba(255,255,255,0.5)); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+  </style>
 </head>
 <body>
 
@@ -23,171 +168,166 @@
     <a href="catalog.html?type=top">Топ</a>
   </nav>
   <div class="header-actions">
-    <a href="profile.html" class="btn-primary" style="border:1px solid var(--accent);">Профиль</a>
+    <button class="btn-login-google" id="headerLoginBtn">
+      <svg width="15" height="15" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+        <path d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Войти
+    </button>
+    <div class="avatar-dropdown-wrap" id="headerAvatarWrap">
+      <button class="header-avatar-btn" id="headerAvatarBtn">
+        <div class="header-avatar-initials" id="headerAvatarInitials"></div>
+      </button>
+      <div class="avatar-dropdown" id="avatarDropdown">
+        <div class="avatar-dropdown-user">
+          <div class="avatar-dropdown-name" id="dropdownName">—</div>
+          <div class="avatar-dropdown-email" id="dropdownEmail">—</div>
+        </div>
+        <a href="profile.html" class="avatar-dropdown-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Мой профиль
+        </a>
+        <div class="avatar-dropdown-item danger" id="dropdownLogout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти
+        </div>
+      </div>
+    </div>
   </div>
   <button class="burger"><span></span><span></span><span></span></button>
 </header>
 
 <main class="page-wrap z1">
 
-  <!-- PROFILE HEADER -->
-  <div class="profile-header">
-    <div class="profile-avatar-wrap">
-      <img class="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face" alt="Аватар" />
-      <div class="profile-edit-badge">
-        <svg width="12" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      </div>
-    </div>
-
-    <div style="flex:1;">
-      <div class="profile-name">Александр К.</div>
-      <div class="profile-meta">Участник с 2023 · Премиум подписка</div>
-      <div class="profile-stats">
-        <div class="pstat">
-          <div class="pstat-val">142</div>
-          <div class="pstat-label">Просмотрено</div>
-        </div>
-        <div class="pstat">
-          <div class="pstat-val">28</div>
-          <div class="pstat-label">В списке</div>
-        </div>
-        <div class="pstat">
-          <div class="pstat-val">9</div>
-          <div class="pstat-label">Рецензий</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:8px;align-self:flex-start;margin-top:8px;">
-      <button class="btn-outline-sm">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Редактировать
-      </button>
-      <button class="btn-outline-sm" style="color:var(--red);border-color:rgba(255,74,74,.3);">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Выйти
-      </button>
-    </div>
+  <!-- Гость — не авторизован -->
+  <div class="guest-banner" id="guestBanner">
+    <h2>Войди, чтобы увидеть профиль</h2>
+    <p>Авторизуйся через Google, чтобы получить доступ к своему профилю, истории просмотров и любимым фильмам.</p>
+    <button class="btn-watch" id="guestLoginBtn" style="margin:0 auto;">
+      Войти через Google
+    </button>
   </div>
 
-  <!-- CURRENTLY WATCHING -->
-  <div class="section-block" style="margin-top:8px;">
-    <div class="section-header">
-      <h2 class="section-title">Продолжить просмотр</h2>
-      <div class="section-line"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;" id="continue-grid">
-      <!-- Generated by JS -->
-    </div>
-  </div>
+  <!-- Авторизованный профиль -->
+  <div id="profileContent" style="display:none;">
 
-  <!-- TABS: watchlist / history / reviews -->
-  <div class="section-block">
-    <div class="tab-bar">
-      <button class="tab-btn">Список просмотра</button>
-      <button class="tab-btn">История</button>
-      <button class="tab-btn">Рецензии</button>
-      <button class="tab-btn">Настройки</button>
-    </div>
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <div class="profile-photo-wrap">
+        <div id="profilePhotoEl"></div>
+        <label class="photo-upload-btn" title="Сменить фото">
+          <svg width="12" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <input type="file" id="photoFileInput" accept="image/*" />
+        </label>
+      </div>
 
-    <!-- Tab: Watchlist -->
-    <div class="tab-pane" id="watchlist" style="display:none;">
-      <div class="cards-grid" id="watchlist-grid"></div>
-    </div>
-
-    <!-- Tab: History -->
-    <div class="tab-pane" style="display:none;">
-      <div class="cards-grid" id="history-grid"></div>
-    </div>
-
-    <!-- Tab: Reviews -->
-    <div class="tab-pane" style="display:none;">
-      <div style="display:flex;flex-direction:column;gap:16px;margin-top:4px;" id="reviews-list">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=60&h=40&fit=crop" style="border-radius:5px;width:60px;height:40px;object-fit:cover;" />
-            <div>
-              <div style="font-family:var(--font-display);letter-spacing:.06em;color:var(--text);">Интерстеллар</div>
-              <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);">Оценка: <span style="color:var(--gold);">★ 10/10</span></div>
-            </div>
-          </div>
-          <p style="font-size:.95rem;color:var(--text2);font-weight:300;line-height:1.6;">Один из лучших фильмов в жанре научной фантастики. Потрясающая визуальная составляющая и глубокий сюжет о любви и времени не оставят равнодушным.</p>
+      <div style="flex:1; min-width:0;">
+        <!-- Никнейм -->
+        <div class="nickname-row">
+          <span class="nickname-display" id="nicknameDisplay" title="Нажми чтобы изменить"></span>
+          <input class="nickname-input" id="nicknameInput" maxlength="32" style="display:none;" />
+          <button class="nickname-edit-btn" id="nicknameEditBtn">✎ Изменить</button>
         </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-            <img src="https://images.unsplash.com/photo-1543373014-cfe4f4bc1cdf?w=60&h=40&fit=crop" style="border-radius:5px;width:60px;height:40px;object-fit:cover;" />
-            <div>
-              <div style="font-family:var(--font-display);letter-spacing:.06em;color:var(--text);">Дюна</div>
-              <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);">Оценка: <span style="color:var(--gold);">★ 9/10</span></div>
+        <div class="profile-meta" id="profileMeta" style="margin-top:6px;"></div>
+
+        <div class="profile-stats">
+          <div class="pstat"><div class="pstat-val">142</div><div class="pstat-label">Просмотрено</div></div>
+          <div class="pstat"><div class="pstat-val" id="favCount">0</div><div class="pstat-label">Любимых</div></div>
+          <div class="pstat"><div class="pstat-val">9</div><div class="pstat-label">Рецензий</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;align-self:flex-start;margin-top:8px;">
+        <button class="btn-outline-sm" id="profileLogoutBtn" style="color:var(--red);border-color:rgba(255,74,74,.3);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти
+        </button>
+      </div>
+    </div>
+
+    <!-- ЛЮБИМЫЕ ФИЛЬМЫ -->
+    <div class="section-block favorites-section">
+      <div class="section-header">
+        <h2 class="section-title">Любимые фильмы</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="fav-grid" id="favGrid"></div>
+    </div>
+
+    <!-- ПРОДОЛЖИТЬ ПРОСМОТР -->
+    <div class="section-block" style="margin-top:8px;">
+      <div class="section-header"><h2 class="section-title">Продолжить просмотр</h2><div class="section-line"></div></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;" id="continue-grid"></div>
+    </div>
+
+    <!-- ТАБЫ -->
+    <div class="section-block">
+      <div class="tab-bar">
+        <button class="tab-btn">Список просмотра</button>
+        <button class="tab-btn">История</button>
+        <button class="tab-btn">Рецензии</button>
+        <button class="tab-btn">Настройки</button>
+      </div>
+      <div class="tab-pane" id="watchlist" style="display:none;"><div class="cards-grid" id="watchlist-grid"></div></div>
+      <div class="tab-pane" style="display:none;"><div class="cards-grid" id="history-grid"></div></div>
+      <div class="tab-pane" style="display:none;">
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:4px;" id="reviews-list">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=60&h=40&fit=crop" style="border-radius:5px;width:60px;height:40px;object-fit:cover;" />
+              <div><div style="font-family:var(--font-display);letter-spacing:.06em;color:var(--text);">Интерстеллар</div><div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);">Оценка: <span style="color:var(--gold);">★ 10/10</span></div></div>
+            </div>
+            <p style="font-size:.95rem;color:var(--text2);font-weight:300;line-height:1.6;">Один из лучших фильмов в жанре научной фантастики. Потрясающая визуальная составляющая и глубокий сюжет о любви и времени не оставят равнодушным.</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" style="display:none;">
+        <div style="max-width:560px;margin-top:8px;display:flex;flex-direction:column;gap:24px;">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+            <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Профиль</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label style="display:flex;flex-direction:column;gap:5px;">
+                <span style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">Никнейм</span>
+                <input type="text" id="settingsNickname" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(74,158,255,.4)'" onblur="this.style.borderColor='var(--border)'" />
+              </label>
+              <label style="display:flex;flex-direction:column;gap:5px;">
+                <span style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">Email</span>
+                <input type="email" id="settingsEmail" disabled style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 12px;color:var(--muted);font-family:var(--font-body);font-size:.95rem;outline:none;" />
+              </label>
             </div>
           </div>
-          <p style="font-size:.95rem;color:var(--text2);font-weight:300;line-height:1.6;">Эпическое кино с великолепной операторской работой. Вильнёв снял фильм, достойный оригинала. Жду вторую часть.</p>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+            <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Предпочтения просмотра</div>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <label style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.95rem;color:var(--text2);font-weight:300;">Автовоспроизведение</span><input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;" /></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.95rem;color:var(--text2);font-weight:300;">Субтитры по умолчанию</span><select style="background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:.58rem;padding:4px 8px;outline:none;"><option>Выкл.</option><option selected>Русский</option><option>Английский</option></select></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:.95rem;color:var(--text2);font-weight:300;">Качество по умолчанию</span><select style="background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:.58rem;padding:4px 8px;outline:none;"><option>Авто</option><option selected>4K UHD</option><option>1080p</option><option>720p</option></select></label>
+            </div>
+          </div>
+          <button class="btn-watch" id="saveSettingsBtn" style="align-self:flex-start;">Сохранить изменения</button>
         </div>
       </div>
     </div>
 
-    <!-- Tab: Settings -->
-    <div class="tab-pane" style="display:none;">
-      <div style="max-width:560px;margin-top:8px;display:flex;flex-direction:column;gap:24px;">
-
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
-          <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Профиль</div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <label style="display:flex;flex-direction:column;gap:5px;">
-              <span style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">Имя</span>
-              <input type="text" value="Александр К." style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(74,158,255,.4)'" onblur="this.style.borderColor='var(--border)'" />
-            </label>
-            <label style="display:flex;flex-direction:column;gap:5px;">
-              <span style="font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">Email</span>
-              <input type="email" value="user@example.com" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 12px;color:var(--text);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border-color .2s;" onfocus="this.style.borderColor='rgba(74,158,255,.4)'" onblur="this.style.borderColor='var(--border)'" />
-            </label>
-          </div>
-        </div>
-
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
-          <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Предпочтения просмотра</div>
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <label style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:.95rem;color:var(--text2);font-weight:300;">Автовоспроизведение</span>
-              <input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;" />
-            </label>
-            <label style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:.95rem;color:var(--text2);font-weight:300;">Субтитры по умолчанию</span>
-              <select style="background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:.58rem;padding:4px 8px;outline:none;">
-                <option>Выкл.</option><option selected>Русский</option><option>Английский</option>
-              </select>
-            </label>
-            <label style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:.95rem;color:var(--text2);font-weight:300;">Качество по умолчанию</span>
-              <select style="background:var(--surface3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:.58rem;padding:4px 8px;outline:none;">
-                <option>Авто</option><option selected>4K UHD</option><option>1080p</option><option>720p</option>
-              </select>
-            </label>
-            <label style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:.95rem;color:var(--text2);font-weight:300;">Уведомления о новинках</span>
-              <input type="checkbox" checked style="accent-color:var(--accent);width:16px;height:16px;" />
-            </label>
-          </div>
-        </div>
-
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
-          <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Подписка</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-            <div>
-              <div style="font-family:var(--font-display);font-size:1.3rem;letter-spacing:.06em;color:var(--accent);">Премиум</div>
-              <div style="font-family:var(--font-mono);font-size:.58rem;color:var(--muted);">Активна до 1 января 2026</div>
-            </div>
-            <button class="btn-outline-sm">Управление</button>
-          </div>
-        </div>
-
-        <button class="btn-watch" style="align-self:flex-start;">Сохранить изменения</button>
-
-      </div>
-    </div>
-  </div>
-
+  </div><!-- /profileContent -->
 </main>
+
+<!-- Модалка выбора фильма -->
+<div class="modal-overlay" id="movieModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Добавить любимый фильм</span>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-search">
+      <input type="text" id="modalSearch" placeholder="Поиск фильма…" />
+    </div>
+    <div class="modal-list" id="modalList"></div>
+  </div>
+</div>
 
 <footer class="site-footer">
   <div class="footer-grid">
@@ -196,9 +336,7 @@
     <div><div class="footer-col-title">Аккаунт</div><div class="footer-links"><a href="profile.html">Профиль</a><a href="#">Подписка</a></div></div>
     <div><div class="footer-col-title">Информация</div><div class="footer-links"><a href="#">О нас</a><a href="#">Контакты</a></div></div>
   </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">© 2025 Cinemax · Все права защищены</span>
-  </div>
+  <div class="footer-bottom"><span class="footer-copy">© 2025 Cinemax · Все права защищены</span></div>
 </footer>
 
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
@@ -207,33 +345,276 @@
 <script src="js/render.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Continue watching cards
-    const grid = document.getElementById('continue-grid');
-    if (grid) {
-      const items = CINEMAX_DATA.movies.slice(0, 3);
-      const progresses = [42, 78, 15];
-      grid.innerHTML = items.map((m, i) => `
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .2s;" onclick="location.href='watch.html?id=${m.id}'" onmouseover="this.style.borderColor='rgba(74,158,255,.3)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="position:relative;">
-            <img src="${m.poster}" alt="${m.title}" style="width:100%;height:130px;object-fit:cover;display:block;filter:brightness(.8);" />
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
-              <div style="width:40px;height:40px;border-radius:50%;background:rgba(74,158,255,.85);display:flex;align-items:center;justify-content:center;">
-                <svg width="14" fill="#05080f" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </div>
-            </div>
-            <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--border2);">
-              <div style="height:100%;width:${progresses[i]}%;background:var(--accent);"></div>
-            </div>
-          </div>
-          <div style="padding:12px;">
-            <div style="font-family:var(--font-display);letter-spacing:.05em;color:var(--text);margin-bottom:3px;">${m.title}</div>
-            <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);">Просмотрено ${progresses[i]}%</div>
-          </div>
-        </div>`).join('');
+
+<script type="module">
+import {
+  loginWithGoogle, logout, onAuthChange,
+  getCustomData, saveCustomData,
+  getFavorites, addFavorite, removeFavorite
+} from './js/auth.js';
+
+// ── Элементы хедера ─────────────────────────────────────────────
+const loginBtn      = document.getElementById('headerLoginBtn');
+const avatarBtn     = document.getElementById('headerAvatarBtn');
+const dropdown      = document.getElementById('avatarDropdown');
+const initials      = document.getElementById('headerAvatarInitials');
+const dropdownName  = document.getElementById('dropdownName');
+const dropdownEmail = document.getElementById('dropdownEmail');
+const logoutBtn     = document.getElementById('dropdownLogout');
+
+// ── Элементы профиля ────────────────────────────────────────────
+const guestBanner     = document.getElementById('guestBanner');
+const profileContent  = document.getElementById('profileContent');
+const profilePhotoEl  = document.getElementById('profilePhotoEl');
+const profileMeta     = document.getElementById('profileMeta');
+const nicknameDisplay = document.getElementById('nicknameDisplay');
+const nicknameInput   = document.getElementById('nicknameInput');
+const nicknameEditBtn = document.getElementById('nicknameEditBtn');
+const favGrid         = document.getElementById('favGrid');
+const favCount        = document.getElementById('favCount');
+const photoInput      = document.getElementById('photoFileInput');
+const profileLogout   = document.getElementById('profileLogoutBtn');
+const settingsNick    = document.getElementById('settingsNickname');
+const settingsEmail   = document.getElementById('settingsEmail');
+const saveSettings    = document.getElementById('saveSettingsBtn');
+
+let currentUser = null;
+
+// ── Хедер: отрисовка аватара ────────────────────────────────────
+function renderHeaderAuth(user) {
+  if (user) {
+    loginBtn.style.display  = 'none';
+    avatarBtn.style.display = 'block';
+    dropdownName.textContent  = user.displayName || 'Пользователь';
+    dropdownEmail.textContent = user.email || '';
+    if (user.photoURL) {
+      avatarBtn.innerHTML = `<img src="${user.photoURL}" alt="Аватар" referrerpolicy="no-referrer"/>`;
+    } else {
+      const letter = (user.displayName || user.email || '?')[0].toUpperCase();
+      avatarBtn.innerHTML = `<div class="header-avatar-initials">${letter}</div>`;
     }
+  } else {
+    loginBtn.style.display  = 'flex';
+    avatarBtn.style.display = 'none';
+    dropdown.classList.remove('open');
+  }
+}
+
+// ── Фото профиля ────────────────────────────────────────────────
+function renderProfilePhoto(user) {
+  if (user.photoURL) {
+    profilePhotoEl.innerHTML = `<img src="${user.photoURL}" alt="Аватар" referrerpolicy="no-referrer" class="profile-avatar"/>`;
+  } else {
+    const letter = (user.displayName || user.email || '?')[0].toUpperCase();
+    profilePhotoEl.innerHTML = `<div class="profile-photo-initials">${letter}</div>`;
+  }
+}
+
+// ── Рендер всего профиля ────────────────────────────────────────
+function renderProfile(user) {
+  currentUser = user;
+
+  if (!user) {
+    guestBanner.classList.add('visible');
+    profileContent.style.display = 'none';
+    return;
+  }
+
+  guestBanner.classList.remove('visible');
+  profileContent.style.display = 'block';
+
+  renderProfilePhoto(user);
+  profileMeta.textContent = `${user.email} · Премиум подписка`;
+  nicknameDisplay.textContent = user.displayName || 'Пользователь';
+  nicknameInput.value = user.displayName || '';
+
+  if (settingsNick)   settingsNick.value  = user.displayName || '';
+  if (settingsEmail)  settingsEmail.value = user.email || '';
+
+  renderFavorites();
+  renderContinue();
+}
+
+// ── Любимые фильмы ──────────────────────────────────────────────
+function renderFavorites() {
+  const favs = getFavorites();
+  favCount.textContent = favs.length;
+
+  favGrid.innerHTML = favs.map(m => `
+    <div class="fav-card" onclick="location.href='movie.html?id=${m.id}'">
+      <img src="${m.poster}" alt="${m.title}" loading="lazy" />
+      <div class="fav-card-info">
+        <div class="fav-card-title">${m.title}</div>
+        <div class="fav-card-year">${m.year || ''} · ★ ${m.rating || ''}</div>
+      </div>
+      <button class="fav-remove-btn" title="Удалить" onclick="event.stopPropagation(); removeFav('${m.id}')">
+        <svg width="10" fill="white" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>`).join('') +
+  `<div class="fav-add-btn" id="favAddBtn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    Добавить фильм
+  </div>`;
+
+  document.getElementById('favAddBtn').addEventListener('click', openMovieModal);
+}
+
+window.removeFav = (id) => {
+  removeFavorite(id);
+  renderFavorites();
+};
+
+// ── Модалка выбора фильма ───────────────────────────────────────
+const modal       = document.getElementById('movieModal');
+const modalClose  = document.getElementById('modalClose');
+const modalSearch = document.getElementById('modalSearch');
+const modalList   = document.getElementById('modalList');
+
+function openMovieModal() {
+  modal.classList.add('open');
+  modalSearch.value = '';
+  renderModalList('');
+  setTimeout(() => modalSearch.focus(), 100);
+}
+
+function renderModalList(query) {
+  // CINEMAX_DATA — из вашего data.js
+  const all = (window.CINEMAX_DATA?.movies || []);
+  const favIds = new Set(getFavorites().map(f => f.id));
+  const filtered = all.filter(m =>
+    !favIds.has(m.id) &&
+    (!query || m.title.toLowerCase().includes(query.toLowerCase()))
+  ).slice(0, 30);
+
+  modalList.innerHTML = filtered.length
+    ? filtered.map(m => `
+        <div class="modal-movie-item" onclick="pickMovie('${m.id}')">
+          <img src="${m.poster}" alt="${m.title}" />
+          <div>
+            <div class="modal-movie-title">${m.title}</div>
+            <div class="modal-movie-meta">${m.year || ''} · ★ ${m.rating || ''}</div>
+          </div>
+        </div>`).join('')
+    : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:14px;">Ничего не найдено</div>`;
+}
+
+window.pickMovie = (id) => {
+  const movie = (window.CINEMAX_DATA?.movies || []).find(m => m.id === id);
+  if (movie) { addFavorite(movie); renderFavorites(); }
+  modal.classList.remove('open');
+};
+
+modalClose.addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+modalSearch.addEventListener('input', e => renderModalList(e.target.value));
+
+// ── Никнейм ─────────────────────────────────────────────────────
+let editingNick = false;
+
+nicknameEditBtn.addEventListener('click', () => {
+  if (!editingNick) {
+    editingNick = true;
+    nicknameDisplay.style.display = 'none';
+    nicknameInput.style.display   = 'inline-block';
+    nicknameInput.focus();
+    nicknameInput.select();
+    nicknameEditBtn.textContent = '✓ Сохранить';
+  } else {
+    saveNickname();
+  }
+});
+
+nicknameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveNickname();
+  if (e.key === 'Escape') cancelNickname();
+});
+
+function saveNickname() {
+  const val = nicknameInput.value.trim();
+  if (val && currentUser) {
+    saveCustomData({ displayName: val });
+    currentUser.displayName    = val;
+    nicknameDisplay.textContent = val;
+    dropdownName.textContent    = val;
+    if (settingsNick) settingsNick.value = val;
+  }
+  cancelNickname();
+}
+
+function cancelNickname() {
+  editingNick = false;
+  nicknameDisplay.style.display = 'inline';
+  nicknameInput.style.display   = 'none';
+  nicknameEditBtn.textContent   = '✎ Изменить';
+}
+
+// ── Загрузка фото ────────────────────────────────────────────────
+photoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const dataUrl = ev.target.result;
+    saveCustomData({ photoURL: dataUrl });
+    if (currentUser) currentUser.photoURL = dataUrl;
+    renderProfilePhoto(currentUser);
+    renderHeaderAuth(currentUser);
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── Настройки: сохранить ────────────────────────────────────────
+if (saveSettings) {
+  saveSettings.addEventListener('click', () => {
+    const nick = settingsNick?.value.trim();
+    if (nick && currentUser) {
+      saveCustomData({ displayName: nick });
+      currentUser.displayName    = nick;
+      nicknameDisplay.textContent = nick;
+      dropdownName.textContent    = nick;
+    }
+    saveSettings.textContent = '✓ Сохранено';
+    setTimeout(() => saveSettings.textContent = 'Сохранить изменения', 2000);
   });
+}
+
+// ── Продолжить просмотр ─────────────────────────────────────────
+function renderContinue() {
+  const grid = document.getElementById('continue-grid');
+  if (!grid || !window.CINEMAX_DATA) return;
+  const items = CINEMAX_DATA.movies.slice(0, 3);
+  const prog  = [42, 78, 15];
+  grid.innerHTML = items.map((m, i) => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .2s;" onclick="location.href='watch.html?id=${m.id}'" onmouseover="this.style.borderColor='rgba(74,158,255,.3)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="position:relative;">
+        <img src="${m.poster}" alt="${m.title}" style="width:100%;height:130px;object-fit:cover;display:block;filter:brightness(.8);" />
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:40px;height:40px;border-radius:50%;background:rgba(74,158,255,.85);display:flex;align-items:center;justify-content:center;"><svg width="14" fill="#05080f" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--border2);"><div style="height:100%;width:${prog[i]}%;background:var(--accent);"></div></div>
+      </div>
+      <div style="padding:12px;"><div style="font-family:var(--font-display);letter-spacing:.05em;color:var(--text);margin-bottom:3px;">${m.title}</div><div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);">Просмотрено ${prog[i]}%</div></div>
+    </div>`).join('');
+}
+
+// ── Auth ─────────────────────────────────────────────────────────
+onAuthChange((user) => {
+  renderHeaderAuth(user);
+  renderProfile(user);
+});
+
+document.getElementById('headerLoginBtn').addEventListener('click', async () => {
+  try { await loginWithGoogle(); } catch { alert('Ошибка входа. Проверь настройки Firebase.'); }
+});
+document.getElementById('guestLoginBtn').addEventListener('click', async () => {
+  try { await loginWithGoogle(); } catch { alert('Ошибка входа.'); }
+});
+
+avatarBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('open'); });
+document.addEventListener('click', () => dropdown.classList.remove('open'));
+dropdown.addEventListener('click', e => e.stopPropagation());
+
+logoutBtn.addEventListener('click',     () => logout());
+profileLogout?.addEventListener('click', () => logout());
 </script>
+
 </body>
 </html>

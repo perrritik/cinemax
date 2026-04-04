@@ -13,10 +13,12 @@
 </head>
 <body>
 
+
+<!-- HEADER -->
 <header class="site-header">
   <a href="index.html" class="logo">CINE<span>MAX</span></a>
   <nav class="site-nav">
-    <a href="index.html">Главная</a>
+    <a href="index.html" class="active">Главная</a>
     <a href="catalog.html">Фильмы</a>
     <a href="catalog.html?type=series">Сериалы</a>
     <a href="catalog.html?type=new">Новинки</a>
@@ -27,8 +29,39 @@
     <input type="text" placeholder="Поиск…" class="catalog-search-input" />
   </div>
   <div class="header-actions">
-    <a href="profile.html" class="btn-ghost">Профиль</a>
-    <a href="profile.html" class="btn-primary">Войти</a>
+
+    <!-- Кнопка входа (только когда не авторизован) -->
+    <button class="btn-login-google" id="headerLoginBtn">
+      <svg width="15" height="15" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+        <path d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Войти
+    </button>
+
+    <!-- Аватар (только когда авторизован) -->
+    <div class="avatar-dropdown-wrap" id="headerAvatarWrap">
+      <button class="header-avatar-btn" id="headerAvatarBtn">
+        <div class="header-avatar-initials" id="headerAvatarInitials"></div>
+      </button>
+      <div class="avatar-dropdown" id="avatarDropdown">
+        <div class="avatar-dropdown-user">
+          <div class="avatar-dropdown-name" id="dropdownName">—</div>
+          <div class="avatar-dropdown-email" id="dropdownEmail">—</div>
+        </div>
+        <a href="profile.html" class="avatar-dropdown-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Мой профиль
+        </a>
+        <div class="avatar-dropdown-item danger" id="dropdownLogout">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти
+        </div>
+      </div>
+    </div>
+
   </div>
   <button class="burger"><span></span><span></span><span></span></button>
 </header>
@@ -50,7 +83,7 @@
     <span class="sep">/</span>
     <a href="catalog.html">Каталог</a>
     <span class="sep">/</span>
-    <span class="current movie-title-crumb">Фильм</span>
+    <span class="current mv-title-crumb">Загрузка...</span>
   </div>
 
   <!-- TWO-COLUMN LAYOUT -->
@@ -58,12 +91,21 @@
 
     <!-- LEFT: poster + actions -->
     <div class="movie-poster-col">
-      <img class="movie-poster-img" src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&h=900&fit=crop" alt="Постер" id="movie-poster" />
+      <img class="movie-poster-img" src="" alt="Постер" id="movie-poster" />
       <div class="movie-poster-actions">
-        <button class="btn-watch" style="width:100%;justify-content:center;" data-watch-movie data-watch="interstellar">
+
+        <!-- Кнопка "Смотреть" — скрыта если нет видео -->
+        <a id="btn-watch-link" href="#" class="btn-watch" style="width:100%;justify-content:center;text-decoration:none;display:flex;">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           Смотреть
-        </button>
+        </a>
+
+        <!-- Заглушка "Скоро" — скрыта если есть видео -->
+        <div id="btn-soon" class="btn-watch" style="width:100%;justify-content:center;display:none;opacity:.45;cursor:default;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Скоро
+        </div>
+
         <button class="btn-outline-sm" style="width:100%;justify-content:center;" id="btn-watchlist">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           В список
@@ -77,24 +119,20 @@
 
     <!-- RIGHT: info -->
     <div class="movie-info-col">
-      <p class="movie-title-orig">Interstellar</p>
-      <h1 class="movie-title-big">Интерстеллар</h1>
+      <p class="movie-title-orig mv-title-orig"></p>
+      <h1 class="movie-title-big mv-title"></h1>
 
       <div class="movie-stats-row">
-        <span class="rating-badge mv-rating">★ 8.6</span>
-        <span class="stat-tag mv-year">2014</span>
-        <span class="stat-tag mv-dur">169 мин.</span>
-        <span class="stat-tag mv-age">16+</span>
-        <span class="quality-tag mv-quality">4K UHD</span>
+        <span class="rating-badge mv-rating"></span>
+        <span class="stat-tag mv-year"></span>
+        <span class="stat-tag mv-dur"></span>
+        <span class="stat-tag mv-age"></span>
+        <span class="quality-tag mv-quality"></span>
       </div>
 
-      <div class="genre-tags-row">
-        <span class="genre-tag">Фантастика</span>
-        <span class="genre-tag">Драма</span>
-        <span class="genre-tag">Приключения</span>
-      </div>
+      <div class="genre-tags-row mv-genres"></div>
 
-      <p class="movie-desc">Когда засуха приводит человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти новый дом для цивилизации.</p>
+      <p class="movie-desc mv-desc"></p>
 
       <!-- TABS -->
       <div class="tab-bar" style="margin-top:0;">
@@ -108,41 +146,36 @@
         <div class="crew-grid" style="margin-top:16px;">
           <div class="crew-item">
             <div class="crew-role">Режиссёр</div>
-            <div class="crew-name mv-director">Кристофер Нолан</div>
+            <div class="crew-name mv-director">—</div>
           </div>
           <div class="crew-item">
             <div class="crew-role">Страна</div>
-            <div class="crew-name mv-country">США, Великобритания</div>
+            <div class="crew-name mv-country">—</div>
           </div>
           <div class="crew-item">
             <div class="crew-role">Язык</div>
-            <div class="crew-name mv-lang">Русский, Английский</div>
+            <div class="crew-name mv-lang">—</div>
           </div>
-          <div class="crew-item">
-            <div class="crew-role">Студия</div>
-            <div class="crew-name">Paramount Pictures</div>
+          <div class="crew-item mv-seasons-row" style="display:none;">
+            <div class="crew-role">Сезонов</div>
+            <div class="crew-name mv-seasons">—</div>
           </div>
         </div>
       </div>
 
       <!-- Tab: Cast -->
       <div class="tab-pane" style="display:none;">
-        <div class="crew-grid" style="margin-top:16px;">
-          <div class="crew-item"><div class="crew-role">Главная роль</div><div class="crew-name">Мэттью МакКонахи</div></div>
-          <div class="crew-item"><div class="crew-role">Главная роль</div><div class="crew-name">Энн Хэтэуэй</div></div>
-          <div class="crew-item"><div class="crew-role">Роль</div><div class="crew-name">Джессика Честейн</div></div>
-          <div class="crew-item"><div class="crew-role">Роль</div><div class="crew-name">Майкл Кейн</div></div>
-          <div class="crew-item"><div class="crew-role">Роль</div><div class="crew-name">Мэтт Деймон</div></div>
-          <div class="crew-item"><div class="crew-role">Роль</div><div class="crew-name">Тимоти Шаламе</div></div>
-        </div>
+        <div class="crew-grid mv-cast-grid" style="margin-top:16px;"></div>
       </div>
 
       <!-- Tab: Trailer -->
       <div class="tab-pane" style="display:none;">
-        <div style="margin-top:16px;aspect-ratio:16/9;background:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);">
-          <div style="text-align:center;color:var(--muted);">
-            <div style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:.1em;margin-bottom:8px;">ТРЕЙЛЕР</div>
-            <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;">Вставьте ссылку на YouTube / iframe</div>
+        <div id="trailer-wrap" style="margin-top:16px;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+          <div id="trailer-soon" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+            <div style="text-align:center;color:var(--muted);">
+              <div style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:.1em;margin-bottom:8px;">СКОРО</div>
+              <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;">Трейлер появится позже</div>
+            </div>
           </div>
         </div>
       </div>
@@ -173,35 +206,126 @@
     <span class="footer-copy">© 2025 Cinemax · Все права защищены</span>
   </div>
 </footer>
-
+<script type="module" src="js/authgoogle.js"></script>
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script src="js/data.js"></script>
 <script src="js/player.js"></script>
 <script src="js/render.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
+
 <script>
-  // Set backdrop from poster
-  document.addEventListener('DOMContentLoaded', () => {
-    const id = new URLSearchParams(window.location.search).get('id') || 'interstellar';
-    const all = [...CINEMAX_DATA.featured, ...CINEMAX_DATA.movies, ...(CINEMAX_DATA.series||[])];
-    const m = all.find(x => x.id === id);
-    if (m) {
-      document.getElementById('movie-backdrop').style.backgroundImage = `url('${m.bg || m.poster}')`;
-      document.getElementById('movie-poster').src = m.poster;
-      document.querySelector('.movie-title-crumb').textContent = m.title;
+document.addEventListener('DOMContentLoaded', () => {
+  // ── 1. Найти фильм по ?id= ──────────────────────────────────
+  const id = new URLSearchParams(window.location.search).get('id') || 'interstellar';
+  const all = [
+    ...(CINEMAX_DATA.featured || []),
+    ...(CINEMAX_DATA.movies   || []),
+    ...(CINEMAX_DATA.series   || []),
+  ];
+  const m = all.find(x => x.id === id);
+
+  if (!m) {
+    document.querySelector('.mv-title').textContent = 'Фильм не найден';
+    return;
+  }
+
+  // ── 2. Заполнить все поля ────────────────────────────────────
+  document.title = `${m.title} — Cinemax`;
+
+  // Breadcrumb + заголовки
+  document.querySelector('.mv-title-crumb').textContent = m.title;
+  document.querySelector('.mv-title-orig').textContent  = m.titleOrig || '';
+  document.querySelector('.mv-title').textContent       = m.title;
+
+  // Бейджи
+  document.querySelector('.mv-rating').textContent  = `★ ${m.rating}`;
+  document.querySelector('.mv-year').textContent    = m.year;
+  document.querySelector('.mv-dur').textContent     = m.duration || (m.seasons ? `${m.seasons} сез.` : '');
+  document.querySelector('.mv-age').textContent     = m.age || '';
+  document.querySelector('.mv-quality').textContent = m.quality || '';
+
+  // Жанры
+  const genreEl = document.querySelector('.mv-genres');
+  if (m.genres) {
+    genreEl.innerHTML = m.genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+  }
+
+  // Описание
+  document.querySelector('.mv-desc').textContent = m.desc || m.description || '';
+
+  // Детали
+  document.querySelector('.mv-director').textContent = m.director || '—';
+  document.querySelector('.mv-country').textContent  = m.country  || '—';
+  document.querySelector('.mv-lang').textContent     = m.lang     || '—';
+
+  // Сезоны (только для сериалов)
+  if (m.seasons) {
+    const seasRow = document.querySelector('.mv-seasons-row');
+    seasRow.style.display = '';
+    document.querySelector('.mv-seasons').textContent = m.seasons;
+  }
+
+  // Актёры
+  const castGrid = document.querySelector('.mv-cast-grid');
+  if (m.cast && m.cast.length) {
+    const roles = ['Главная роль', 'Главная роль', 'Роль', 'Роль', 'Роль', 'Роль', 'Роль', 'Роль'];
+    castGrid.innerHTML = m.cast.map((actor, i) => `
+      <div class="crew-item">
+        <div class="crew-role">${roles[i] || 'Роль'}</div>
+        <div class="crew-name">${actor}</div>
+      </div>`).join('');
+  }
+
+  // Постер + фоновое изображение
+  const posterEl = document.getElementById('movie-poster');
+  posterEl.src = m.poster || '';
+  posterEl.alt = m.title;
+  document.getElementById('movie-backdrop').style.backgroundImage = `url('${m.bg || m.poster}')`;
+
+  // ── 3. Кнопка "Смотреть" или заглушка "Скоро" ───────────────
+  const hasVideo = m.video && m.video !== 'VIDEO_URL.mp4' && m.video.trim() !== '';
+  const btnWatch = document.getElementById('btn-watch-link');
+  const btnSoon  = document.getElementById('btn-soon');
+
+  if (hasVideo) {
+    btnWatch.href = `watch.html?id=${m.id}`;
+    btnWatch.style.display = 'flex';
+    btnSoon.style.display  = 'none';
+  } else {
+    btnWatch.style.display = 'none';
+    btnSoon.style.display  = 'flex';
+  }
+
+  // ── 4. Похожие фильмы (тот же жанр) ─────────────────────────
+  const similarGrid = document.getElementById('similar-grid');
+  if (similarGrid && m.genres && m.genres.length) {
+    const mainGenre = m.genres[0];
+    const similar = all
+      .filter(x => x.id !== m.id && x.genres && x.genres.includes(mainGenre))
+      .slice(0, 6);
+
+    if (similar.length && typeof Render !== 'undefined') {
+      Render.cards(similarGrid, similar);
     }
-    // Watchlist toggle
-    document.getElementById('btn-watchlist')?.addEventListener('click', function() {
-      this.style.color = 'var(--accent)';
-      this.style.borderColor = 'rgba(74,158,255,.4)';
-    });
-    // Share
-    document.getElementById('btn-share')?.addEventListener('click', () => {
-      if (navigator.share) navigator.share({ title: document.title, url: location.href });
-      else navigator.clipboard?.writeText(location.href);
-    });
+  }
+
+  // ── 5. Кнопки действий ──────────────────────────────────────
+  document.getElementById('btn-watchlist')?.addEventListener('click', function() {
+    this.style.color = 'var(--accent)';
+    this.style.borderColor = 'rgba(74,158,255,.4)';
+    this.querySelector('svg').style.fill = 'var(--accent)';
   });
+
+  document.getElementById('btn-share')?.addEventListener('click', () => {
+    if (navigator.share) {
+      navigator.share({ title: m.title, url: location.href });
+    } else {
+      navigator.clipboard?.writeText(location.href);
+    }
+  });
+});
 </script>
+
 </body>
 </html>
